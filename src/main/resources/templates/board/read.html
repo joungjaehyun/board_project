@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/lteLayout.html}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Read</title>
+</head>
+
+<body>
+  <div layout:fragment="content">
+
+    <form class="form-horizontal" action="/board/delete/" method="post">
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+
+
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">글번호 <br>
+            <input type="text" class="boardNum" th:value="${dto.bno}" readonly />
+          </div>
+
+
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">제목 <br>
+            <input type="text" class="boardTitle" th:value="${dto.title}" readonly />
+          </div>
+
+
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">내용 <br>
+            <input type="text" class="boardContent" th:value="${dto.content}" readonly />
+          </div>
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">작성자 <br>
+            <input type="text" class="boardWriter" th:value="${dto.writer}" readonly />
+          </div>
+          <div class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">작성일 <br>
+            <input type="text" class="boarddate" th:value="${dto.regdate}" readonly />
+          </div>
+
+        </div>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary modifyButton">
+          수정
+        </button>
+
+
+        <button type="button" class="btn btn-info listButton">
+          목록
+        </button>
+      </div>
+
+    </form>
+
+    <div class="replyModal modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <input type="text" name="rno" readonly>
+            <input type="text" name="gno" readonly>
+            <input type="text" name="reply" value="AAAA">
+            <input type="text" name="replyer" value="BBB">
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btnDelete">DELETE</button>
+            <button type="button" class="btn btn-primary btnModify">MODIFY</button>
+            <button type="button" class="btn btn-primary btnReturnReply">답글 달기</button>
+            <button type="button" class="btn btn-secondary modalClose" data-dismiss="modal">ClOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <form class="form-horizontal replyAdd">
+      <div class="row">
+
+        <div class="form-group col-sm-8">
+          <input class="form-control input-sm" name="registReply" id="newReplyText" type="text" placeholder="댓글 입력...">
+        </div>
+
+        <div class="form-group col-sm-2">
+          <input class="form-control input-sm" name="registReplyer" id="newReplyWriter" type="text" placeholder="작성자">
+        </div>
+
+        <div class="form-group col-sm-2" data-tno=${tno}>
+          <button type="button" class="btn btn-primary btn-sm btn-block replyAddBtn">
+            댓글 달기</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div>
+    <ul class="replyListUl">
+
+    </ul>
+  </div>
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/axios.js"></script>
+  <script src="/js/pageUtil.js"></script>
+
+
+
+
+
+  </div>
+  <script layout:fragment="script" th:inline="javascript">
+
+    const modBtn = document.querySelector(".modifyButton")
+    const listBtn = document.querySelector(".listButton")
+    const actionForm = document.querySelector(".form-horizontal");
+
+    const { bno } = [[${ dto }]]
+    const { link } = [[${ pageRequestDTO }]]
+    const {page, size} =[[${requestDTO}]]
+
+    // const {page} = [[${PageRequestDTO}]]
+
+
+    modBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      actionForm.setAttribute("action", `/board/modify/${bno}?${link}`)
+      actionForm.setAttribute("method", `get`)
+      actionForm.submit();
+    }, false)
+
+    listBtn.addEventListener("click", (e) => {
+      console.log(bno)
+      actionForm.setAttribute("action", `/board/list?${link}`)
+      actionForm.setAttribute("method", `get`)
+      actionForm.submit();
+    }, false)
+
+
+    const replyListUl = document.querySelector(".replyListUl");
+    const raplyAdd = document.querySelector(".replyAdd")
+    const modalGno = document.querySelector("input[name='gno']")
+    const modalRno = document.querySelector("input[name='rno']")
+    const modalReply = document.querySelector("input[name='reply']")
+    const modalReplyer = document.querySelector("input[name='replyer']")
+    const registReply = document.querySelector("input[name='registReply']")
+    const registReplyer = document.querySelector("input[name='registReplyer']")
+    const replyModal = document.querySelector(".replyModal")
+
+    replyListUl.addEventListener("click", (e) => {
+      
+      e.preventDefault();
+      e.stopPropagation();
+
+      replyModal.show()
+
+      const target = e.target;
+      const targetName = target.tagName;
+      if (targetName === 'BUTTON') {
+        const liObj = target.closest("li");
+        modalGno.value = liObj.getAttribute("data-gno");
+        modalRno.value = liObj.getAttribute("data-rno");
+        modalReply.value = liObj.getAttribute("data-reply");
+        modalReplyer.value = liObj.getAttribute("data-replyer");
+      }
+    }, false)
+
+
+    document.querySelector(".modalClose").addEventListener("click", (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      replyModal.hide();
+    })
+
+    const loadReply = async (page, goEnd = false) => {
+
+      const data = await loadList(page)
+
+      console.log(data)
+
+      const { list, total } = data
+
+      let str = ""
+
+      for (let i = 0; i < list.length; i++) {
+
+        const { rno, reply, replyer, replyDate, modifyDate, gno, step } = list[i]
+        const replyListStr =  makePages(page, size, totalPage)
+
+        if (step === 1) {
+          str += `<li data-rno=${rno} data-gno=${gno} data-reply=${reply} data-replyer=${replyer} style="margin-left: 60px">
+    
+      작성자 : ${replyer} | ${replyDate} <br> 내용 : ${reply}  
+      
+      <button>답글</button>
+      <button>수정</button>
+      <button>삭제</button>
+      </li>
+      <hr>`
+        } else {
+         
+          str += `<li data-rno=${rno} data-gno=${gno} data-reply=${reply} data-replyer=${replyer}>
+      
+      작성자 : ${replyer} | ${replyDate} <br> 내용 : ${reply}  
+      
+      <button>답글</button>
+      <button>수정</button>
+      <button>삭제</button>
+      </li>
+      <hr>
+      `
+        }
+      }
+      console.log(replyListUl)
+      replyListUl.innerHTML = str
+      replyListUl.innerHTML +=replyListStr
+
+    }
+    
+
+
+
+    document.querySelector(".btnDelete").addEventListener("click", () => {
+
+      e.stopPropagation()
+      e.preventDefault()
+      deleteReply(modalRno.value).then(result => {
+
+        modalReply.value = '';
+        modalReplyer.value = '';
+
+        replyModal.hide();
+        loadReply(1, true);
+      })
+    })
+
+
+    document.querySelector(".btnModify").addEventListener("click", () => {
+      e.stopPropagation()
+      e.preventDefault()
+      const list =
+      {
+        tno: tno,
+        gno: modalGno.value,
+        reply: modalReply.value,
+        replyer: modalReplyer.value,
+        rno: modalRno.value
+      }
+
+      modifyReply(list).then((value) => {
+        
+
+        replyModal.hide();
+        loadReply(1, true)
+      });
+    })
+
+
+    document.querySelector(".btnReturnReply").addEventListener("click", () => {
+      
+      const list = {
+        tno: tno,
+        reply: modalReply.value,
+        replyer: modalReplyer.value,
+        gno: modalGno.value
+      }
+      registReply(list).then((value) => {
+        replyModal.hide();
+
+        loadReply(1, true)
+      });
+    }, false)
+
+
+
+    loadReply(1, true)
+
+
+  </script>
+
+</body>
+
+</html>
