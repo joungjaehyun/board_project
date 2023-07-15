@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.board2.dto.BoardDTO;
 import org.zerock.board2.dto.PageRequestDTO;
 import org.zerock.board2.dto.PageResponseDTO;
+import org.zerock.board2.dto.board.BoardDTO;
+import org.zerock.board2.dto.board.BoardInsertDTO;
 import org.zerock.board2.service.BoardService;
 
 import jakarta.servlet.http.Cookie;
@@ -90,7 +91,7 @@ public class BoardController {
     }
 
     @PostMapping("/regist")
-    public String postRegist(BoardDTO boardDTO){
+    public String postRegist(BoardInsertDTO boardDTO){
 
         log.info("post regist...");
 
@@ -100,7 +101,7 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
-    public String postModify(BoardDTO boardDTO, RedirectAttributes rttr){
+    public String postModify(BoardInsertDTO boardDTO, RedirectAttributes rttr){
 
         log.info("post modify....");
         service.modifyOne(boardDTO);

@@ -3,21 +3,23 @@ package org.zerock.board2.mappers;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.zerock.board2.dto.BoardDTO;
 import org.zerock.board2.dto.PageRequestDTO;
+import org.zerock.board2.dto.board.BoardDTO;
+import org.zerock.board2.dto.board.BoardInsertDTO;
+import org.zerock.board2.dto.board.BoardReadDTO;
 
 public interface BoardMapper {
     
     // 모든 리스트를 가져오는 맵퍼
     List<BoardDTO> getList(PageRequestDTO pageRequestDTO);
     // 1개의 게시글을 가져오는 맵퍼
-    BoardDTO getOne(Long bno);
+    BoardReadDTO getOne(Long bno);
     // 게시글을 추가하는 맵퍼
-    int insertOne(BoardDTO boardDTO);
+    int insertOne(BoardInsertDTO boardDTO);
     // 게시글을 삭제하는 맵퍼
     int deleteOne(Long bno);
     // 게시글을 수정하는 맵퍼
-    int modifyOne(BoardDTO boardDTO);
+    int modifyOne(BoardInsertDTO boardDTO);
     // 1번에 리스트 몇개씩가져오는지 알려주는 맵퍼
     long listCount(PageRequestDTO pageRequestDTO);
     // 조회수 추가

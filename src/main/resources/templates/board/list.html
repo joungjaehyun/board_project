@@ -23,7 +23,7 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Bordered Table</h3>
-        
+
         <form action="/board/list" method="get" class="searchForm">
           <input type="hidden" name="page" th:value="${pageRequestDTO.page}">
           <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
@@ -34,7 +34,8 @@
             <option value="content" th:selected="${pageRequestDTO.type == 'content'}">내용</option>
             <option value="writer" th:selected="${pageRequestDTO.type == 'writer'}">작성자 </option>
           </select>
-          <input type="text" name="keyword" class="form-control mb-3" placeholder="검색어를 입력 해주세요." th:value="${pageRequestDTO.keyword}">
+          <input type="text" name="keyword" class="form-control mb-3" placeholder="검색어를 입력 해주세요."
+            th:value="${pageRequestDTO.keyword}">
           <div class="button_wrap">
             <button type="submit" class="btn btn-primary btnSearch">검색</button>
           </div>
@@ -57,15 +58,20 @@
           <tbody>
             <tr th:each="board :${dto.list}">
               <td>[[${board.bno}]]</td>
+              <td class="text-center">
+                <img th:if="${board.fileName}" th:src="|http://localhost/s_${board.fileName}|" />
+                <img th:unless="${board.fileName}" th:src="|http://localhost/Default.jpg|" width="100px"
+                  height="100px" />
+              </td>
               <td class="boardTD" th:data-bno="${board.bno}">[[${board.title}]]</td>
-              <td>[[${board.rCnt]]</td>
+              <td>[[${board.rCnt}]]</td>
               <td>[[${board.writer}]]</td>
               <td>[[${board.regdate}]]</td>
 
               <td>[[${board.viewCnt}]]</td>
-       
+
             </tr>
-         
+
 
           </tbody>
         </table>
@@ -92,7 +98,7 @@
 
       <script src="/js/pageUtil.js"></script>
 
-    
+
     </div>
 
 
@@ -103,7 +109,7 @@
       const boardUL = document.querySelector(".boardUL")
       const searchForm = document.querySelector(".searchForm")
       const btnSearch = document.querySelector(".btnSearch")
-  
+
       boardUL.addEventListener("click", (e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -116,11 +122,11 @@
         actionForm.submit()
 
       }, false)
-      
-      const {page,size} = [[${pageRequestDTO}]]
 
-      console.log(page,size)
-      const {totalPage} = [[${dto}]]
+      const { page, size } = [[${ pageRequestDTO }]]
+
+      console.log(page, size)
+      const { totalPage } = [[${ dto }]]
       console.log("totalPage:" + totalPage)
 
       const pageLIStr = makePages(page, size, totalPage)
@@ -130,7 +136,7 @@
       boardTable.addEventListener("click", (e) => {
 
         const target = e.target
-        if(!target.getAttribute("data-bno")){
+        if (!target.getAttribute("data-bno")) {
           return
         }
         const bno = target.getAttribute("data-bno")
@@ -140,21 +146,21 @@
         actionForm.setAttribute("action", `/board/read/${bno}`)
         actionForm.submit()
 
-      },false)
+      }, false)
 
       btnSearch.addEventListener("click", e => {
-      e.preventDefault()
-      e.stopPropagation()
+        e.preventDefault()
+        e.stopPropagation()
 
-      if(typeObj.options[typeObj.selectedIndex].value === "" && keywordObj.value !== ""){
-        alert("검색 조건을 선택해주세요")
-        return
-      }
+        if (typeObj.options[typeObj.selectedIndex].value === "" && keywordObj.value !== "") {
+          alert("검색 조건을 선택해주세요")
+          return
+        }
 
-      pageSearchObj.value = 1
+        pageSearchObj.value = 1
 
-      searchForm.submit()
-    }, false)
+        searchForm.submit()
+      }, false)
 
 
     </script>

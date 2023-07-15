@@ -5,9 +5,12 @@
 
 <mapper namespace="org.zerock.board2.mappers.BoardMapper">
 
-    <select id="getList" resultType="org.zerock.board2.dto.BoardDTO">
-            select * from tbl_board1
-            where bno > 0 
+    <select id="getList" resultType="org.zerock.board2.dto.board.BoardDTO">
+            select b1.bno, b1.title, b1.content, b1.writer, b1.regdate, b1.viewCnt, b1.rCnt,
+            concat(bi.uuid,'_',bi.filename) fileName
+            from tbl_board1 b1
+            left outer join tbl_board1_image bi on bi.bno = b1.bno
+            where bno > 0 and bi.ord = 0 or bi.ord is null  
 
     <if test="keyword != null and type != ''">
       and
@@ -23,18 +26,37 @@
         writer like concat('%', #{keyword}, '%')
       </if>
     </if>
-            order by bno desc 
-            limit #{skip}, #{size}  
-              </select>
-
-    <select id="getOne" resultType="org.zerock.board2.dto.BoardDTO">
-        select * from tbl_board1 where bno = #{bno}
+          order by bno desc 
+          limit #{skip}, #{size}  
     </select>
 
+    <select id="getOne" resultMap="BoardResultMap">
+        select b1.bno, b1.title, b1.content, b1.writer, b1.regdate, b1.moddate, b1.viewCnt, b1.rCnt,
+            concat(bi.uuid,'_',bi.filename) fileName
+            from tbl_board1 b1
+            left outer join tbl_board1_image bi on bi.bno = b1.bno
+            where bno = #{bno}
+    </select>
 
-    <insert id="insertOne" parameterType="org.zerock.board2.dto.BoardDTO">
+  <resultMap id="FileNameResultMap" type="java.lang.String">
+      <id property="fileName" column="fileName"/>
+  </resultMap>
+  <resultMap id="BoardResultMap" type="board.file.dto.board.BoardDTO">
+  <id property="tno" column="tno"/>
+    <result property="title" column="title"/>
+    <result property="content" column="content"/>
+    <result property="writer" column="writer"/>
+    <result property="regdate" column="regdate"/>
+    <result property="moddate" column="moddate"/>
+    <result property="viewCnt" column="viewCnt"/>
+    <result property="rCnt" column="rCnt"/>
+  <collection property="fileName" ofType="java.lang.String" resultMap="FileNameResultMap"/>
+  </resultMap>
+
+
+    <insert id="insertOne" parameterType="org.zerock.board2.dto.board.BoardInsertDTO">
         insert into tbl_board1 (title,content,writer) values (#{title},#{content},#{writer})
-        <selectKey resultType="long" keyProperty="tno" order="AFTER">
+        <selectKey resultType="long" keyProperty="bno" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
@@ -43,7 +65,7 @@
         delete from tbl_board1 where bno =#{bno}
     </delete>
 
-    <update id="modifyOne" parameterType="org.zerock.board2.dto.BoardDTO">
+    <update id="modifyOne" parameterType="org.zerock.board2.dto.board.BoardInsertDTO">
         update tbl_board1 set 
         title = #{title},
         content = #{content},

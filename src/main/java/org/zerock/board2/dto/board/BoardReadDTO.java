@@ -1,15 +1,19 @@
-package org.zerock.board2.dto;
+package org.zerock.board2.dto.board;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BoardDTO {
+@ToString
+public class BoardReadDTO {
     
     private Long bno;
     private String title;
@@ -19,4 +23,5 @@ public class BoardDTO {
     private String moddate;
     private Integer viewCnt;
     private Integer rCnt;
+    private List<String> fileName;
 }

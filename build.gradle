@@ -30,6 +30,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.19'
 
 	
 	annotationProcessor 'org.projectlombok:lombok'
