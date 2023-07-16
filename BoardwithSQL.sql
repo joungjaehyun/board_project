@@ -31,14 +31,6 @@ where bno = #{bno}
 # delete 하는 쿼리
 delete from tbl_board1 where bno =#{bno}
 
-select * from t_board2 tb 
-
-
-select b.bno ,b.title, b.writer , count(r.rno) 
-from t_board2 b left join t_reply2 r on r.board_bno = b.bno 
-group by b.bno order by b.bno desc 	
-
-select * from t_reply2 tr 
 
 
 ## 댓글 관련
