@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.board2.mappers.MemberMapper">
+
+    <resultMap id="memberMap" type="org.zerock.board2.dto.member.MemberReadDTO">
+        <id property ="email" column ="email"/>
+        <result property="mname" column="mname"/>
+        <result property="mpw" column="mpw"/>
+        <collection property="rolenames" resultMap="authMap"/>
+    </resultMap>
+
+    <resultMap type="string" id="authMap">
+        <result column ="rolename"/>
+    </resultMap>
+
+     <select id="selectOne" resultMap="memberMap"> 
+        SELECT * FROM 
+        tbl_member 
+        tm INNER JOIN tbl_member_role tmr ON tmr.email = tm.email 
+        WHERE tm.email = #{email}
+    </select>
+
+    <insert id="signUpMember" parameterType="org.zerock.board2.dto.member.MemberConvertDTO">
+        INSERT INTO 
+        tbl_member
+        (email, mpw, mname)
+        VALUES(#{email}, #{mpw}, #{mname})
+    </insert>
+
+    <delete id="deleteMember" parameterType="java.lang.String">
+        DELETE FROM tbl_member
+        WHERE email = #{email}
+    </delete>
+
+    <update id="updateMember" parameterType="org.zerock.board2.dto.member.MemberConvertDTO">
+        UPDATE 
+        tbl_member SET 
+        mpw = #{mpw}, mname = #{mname}
+        WHERE email = #{email}
+    </update>
+
+    <select id="selectMember" parameterType="java.lang.String">
+        SELECT * FROM
+        tbl_member
+        WHERE email = #{email}
+    </select>
+
+    <delete id="deleteMemberRole" parameterType="java.lang.String">
+        DELETE FROM 
+        tbl_member_role
+        WHERE email = #{email}
+    </delete>
+
+</mapper>

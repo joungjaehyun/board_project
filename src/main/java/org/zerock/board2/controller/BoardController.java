@@ -1,5 +1,6 @@
 package org.zerock.board2.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class BoardController {
     private final BoardService service;
 
     @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('USER')")
     public void getList(PageRequestDTO pageRequestDTO, Model model){
         
          PageResponseDTO<BoardDTO> responseDTO 
@@ -40,6 +42,7 @@ public class BoardController {
     }
 
     @GetMapping("/read/{bno}")
+    @PreAuthorize("hasAnyRole('USER')")
     public String getRead(
         @PathVariable("bno") Long bno,
          PageRequestDTO pageRequestDTO,
@@ -76,12 +79,15 @@ public class BoardController {
 
         return "/board/read";
     }
+
     @GetMapping("/regist")
+    @PreAuthorize("hasAnyRole('USER')")
     public void getRegist(BoardDTO boardDTO){
         log.info("get regist");
     }
 
     @GetMapping("/modify/{bno}")
+    @PreAuthorize("hasAnyRole('USER')")
     public String getModify(@PathVariable("bno") Long bno,  PageRequestDTO pageRequestDTO,Model model){
 
         log.info("get modify");
@@ -91,6 +97,7 @@ public class BoardController {
     }
 
     @PostMapping("/regist")
+    @PreAuthorize("hasAnyRole('USER')")
     public String postRegist(BoardInsertDTO boardDTO){
 
         log.info("post regist...");
@@ -101,6 +108,7 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
+    @PreAuthorize("hasAnyRole('USER')")
     public String postModify(BoardInsertDTO boardDTO, RedirectAttributes rttr){
 
         log.info("post modify....");
@@ -110,6 +118,7 @@ public class BoardController {
     }
 
     @PostMapping("/delete/{bno}")
+    @PreAuthorize("hasAnyRole('USER')")
     public String postDelete(@PathVariable("bno")Long bno, RedirectAttributes rttr){
 
         log.info("post delete..."); 

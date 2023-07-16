@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member My Page</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <h1>Member My Page</h1>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form onsubmit="onSubmitForm(event)" method="get">
+                                <h4 class="mb-4">Name</h4>
+                                <div class="alert alert-light" role="alert">[[${member.mname}]]</div>
+                                <h4 class="mb-4">Email</h4>
+                                <div class="alert alert-light" role="alert">[[${member.email}]]</div>
+                                <h4 class="mb-4">Password(Protected)</h4>
+                                <div class="alert alert-light" role="alert">[[${member.mpw}]]</div>
+                                <h4 class="mb-4">Name</h4>
+                                <div class="alert alert-light" role="alert">[[${member.mname}]]</div>
+                                </div>
+                            </form>
+                            <!-- Member Delete & Member Signout & Member Update & Board List Page -->
+                            <form onsubmit="return false;" action="/member/delete" method="post">
+                                <button type="submit" class="btn btn-danger" onclick="confirmDelete()">Delete
+                                    Account</button>
+                                <a th:href="@{|/board/list|}" class="btn btn-primary text-white">Board List
+                                    Page</a>
+                                <a th:href="@{|/member/logout|}" class="btn btn-primary text-white">Sign Out</a>
+                                <a th:href="@{|/member/update/${email}|}" class="btn btn-info text-white">Member Update
+                                    Page</a>
+                            </form>
+                            <!-- Delete & Create Complete Message Start -->
+                            <div class="modal alertModal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">[[${message}]]</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script layout:fragment="script" th:inline="javascript">
+
+        function confirmDelete() {
+            if (confirm("정말로 탈퇴하시겠습니까?")) {
+                var email = document.querySelector('span.email').textContent;
+                var form = document.querySelector('form[action="/member/delete"]');
+                form.action = '/member/delete/' + encodeURIComponent(email);
+                form.submit();
+            }
+        }
+
+        // Update & Delete Message Modal Start
+        const alertModal = new bootstrap.Modal(document.querySelector(".alertModal"))
+        if ([[${ message }]] != null) {
+            alertModal.show();
+        }
+        setTimeout(function () {
+            alertModal.hide();
+        }, 1500);
+    </script>
+
+</body>
+
+</html>
