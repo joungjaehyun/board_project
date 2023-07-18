@@ -17,8 +17,15 @@
 
 (For using this program properly, a user needs to check and set SQL and Mysql preferences. This repository includes an SQL file which is named BoardwithSQL.sql)
 
+
+또한 DB이해를 위한 ERD 다이어 그램을 첨부합니다
+
+(Also, I attach ERD diagram for DB understanding)
+![image](https://github.com/joungjaehyun/board_project/assets/46257969/40aaa8be-dc93-48b5-8703-c33244d99a95)
+
 또한 시스템 구성도를 올리면서 이 프로그램 구상을 종료합니다.
 
 It is system architecture diagram
 
 ![image](https://github.com/joungjaehyun/board_project/assets/46257969/1af292fa-fecd-4955-a51f-5417efa58950)
+
