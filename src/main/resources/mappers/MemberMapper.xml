@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.zerock.board2.mappers.MemberMapper">
+<mapper namespace="com.project.board2.mappers.MemberMapper">
 
-    <resultMap id="memberMap" type="org.zerock.board2.dto.member.MemberReadDTO">
+    <resultMap id="memberMap" type="com.project.board2.dto.member.MemberReadDTO">
         <id property ="email" column ="email"/>
         <result property="mname" column="mname"/>
         <result property="mpw" column="mpw"/>
@@ -23,7 +23,7 @@
         WHERE tm.email = #{email}
     </select>
 
-    <insert id="signUpMember" parameterType="org.zerock.board2.dto.member.MemberConvertDTO">
+    <insert id="signUpMember" parameterType="com.project.board2.dto.member.MemberConvertDTO">
         INSERT INTO 
         tbl_member
         (email, mpw, mname)
@@ -35,7 +35,7 @@
         WHERE email = #{email}
     </delete>
 
-    <update id="updateMember" parameterType="org.zerock.board2.dto.member.MemberConvertDTO">
+    <update id="updateMember" parameterType="com.project.board2.dto.member.MemberConvertDTO">
         UPDATE 
         tbl_member SET 
         mpw = #{mpw}, mname = #{mname}

@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.zerock.board2.mappers.BoardMapper">
+<mapper namespace="com.project.board2.mappers.BoardMapper">
 
-    <select id="getList" resultType="org.zerock.board2.dto.board.BoardDTO">
+    <select id="getList" resultType="com.project.board2.dto.board.BoardDTO">
             select b1.bno, b1.title, b1.content, b1.writer, b1.regdate, b1.viewCnt, b1.rCnt,
             concat(bi.uuid,'_',bi.filename) fileName
             from tbl_board1 b1
@@ -41,7 +41,7 @@
   <resultMap id="FileNameResultMap" type="java.lang.String">
       <id property="fileName" column="fileName"/>
   </resultMap>
-  <resultMap id="BoardResultMap" type="board.file.dto.board.BoardDTO">
+  <resultMap id="BoardResultMap" type="com.project.board2.dto.board.BoardDTO">
   <id property="tno" column="tno"/>
     <result property="title" column="title"/>
     <result property="content" column="content"/>
@@ -54,7 +54,7 @@
   </resultMap>
 
 
-    <insert id="insertOne" parameterType="org.zerock.board2.dto.board.BoardInsertDTO">
+    <insert id="insertOne" parameterType="com.project.board2.dto.board.BoardInsertDTO">
         insert into tbl_board1 (title,content,writer) values (#{title},#{content},#{writer})
         <selectKey resultType="long" keyProperty="bno" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -65,7 +65,7 @@
         delete from tbl_board1 where bno =#{bno}
     </delete>
 
-    <update id="modifyOne" parameterType="org.zerock.board2.dto.board.BoardInsertDTO">
+    <update id="modifyOne" parameterType="com.project.board2.dto.board.BoardInsertDTO">
         update tbl_board1 set 
         title = #{title},
         content = #{content},
